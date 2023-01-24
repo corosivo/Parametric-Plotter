@@ -1,7 +1,7 @@
 # Parametric-Plotter
-# I/O Specification for Grapher
+## I/O Specification for Grapher
 
-## Abstract
+#### Abstract
 
 This program automates the plotting of:
 **2D Parametric Equations** in up to **two parameters**:
@@ -9,7 +9,8 @@ This program automates the plotting of:
 - x(t,s)
 - y(t,s)
 
-## Input
+#### Input
+
 
 1. an equation
     - using cmath-style functions
@@ -19,10 +20,10 @@ This program automates the plotting of:
     - ranges for each parameter
 
 Example Call:
-~~Plot.set_equation( "x(t) = cos(3*t) : t[0,2*pi)" );~~
-~~Plot.set_view("options") __or__ *use default auto*~~
+Plot.set_equation( "x(t) = cos(3*t) : t[0,2*pi)" );
+Plot.set_view("options") **or** use some kind of default autoscaling <br>
 (Should really be a picture of a forms *GUI* with these things as fields.)
 
-## Output
+#### Output
 
 1. screen with plot...duh.
