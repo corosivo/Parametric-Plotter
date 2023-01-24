@@ -14,6 +14,7 @@ The Plotter Project is a project to build a standalone desktop application that 
 
 <br>
 
+
 *What is the MVP?*
 
 The minimum viable product is a plotting app the renders with a GUI and be able to accept input for the system of equations and ranges for the parameters in a simple "click-to-build" style(dropdown menus for basic mathematical functions and such), computes and packages the data for display, and finally renders the plot of the described graph with basic GUI.
