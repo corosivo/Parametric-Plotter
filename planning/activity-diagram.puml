@@ -1,0 +1,42 @@
+@startuml sequence diagram
+scale 1.25
+skinparam style strictuml
+skinparam actorstyle awesome
+hide footbox 
+
+
+actor "User" as U #EFDFD0AF
+participant "Plotter" as P #00f8f880
+participant "GUI" as G #FF6800C0
+
+==Start==
+rnote left of U : initialization
+U -> P ++ #SeaGreen : start()
+    P -> P ++ #paleGreen : initialize
+        P -> G ++ #DarkOrange : begin api
+G --> P
+P --> U -- : status
+
+====
+rnote left of U : setup
+U -> P ++ #paleGreen : set_stuff()
+P -> P : set \ninternals
+P -> G : set api
+G --> P 
+return status
+
+====
+rnote left of U : drawing
+U -> P ++ #paleGreen: draw() 
+P -> P : process\ndata
+P -> G --++ #LightSalmon : send to api
+G -[#OrangeRed]>>o U : window with\nplot
+U o-[#red]> G : close window
+G -> P -- : plot finished
+P -> G : api close
+destroy G
+P -> P 
+destroy P
+==END==
+@enduml
+
