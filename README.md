@@ -20,9 +20,11 @@ This program automates the plotting of:
     - ranges for each parameter
 
 Example Call:
+```c++
 Plot.set_equation( "x(t) = cos(3*t) : t[0,2*pi)" );
-Plot.set_view("options") **or** use some kind of default autoscaling <br>
+Plot.set_view("options")// **or** use some kind of default autoscaling
 (Should really be a picture of a forms *GUI* with these things as fields.)
+```
 
 #### Output
 
