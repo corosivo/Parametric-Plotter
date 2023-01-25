@@ -18,8 +18,8 @@ This program automates the plotting of:
     - ranges for each parameter
 
 Example Call:
-~~Plot.set_equation( "x(t) = cos(3*t) : t[0,2*pi)" );~~
-~~Plot.set_view("options") __or__ *use default auto*~~
+Plot.set_equation( "x(t) = cos(3*t) : t[0,2*pi)" );
+Plot.set_view("options") **or** *use default auto*
 (Should really be a picture of a forms *GUI* with these things as fields.)
 
 ## Output

@@ -1,0 +1,217 @@
+@startuml Equation System
+
+title Analysis of Hierarchy
+
+' settings
+hide empty members
+
+' ===============================================================================================
+' strucuture
+' ===============================================================================================
+package "Structures" #LightGoldenRodYellow{
+struct parameter
+{
+    +dbl start = 0
+    +dbl end = 0
+    +dbl span = -1
+    +bool is_set = false
+}
+
+package "Dimension Aggregate" #GoldenRod{
+    struct dimension
+    {
+        +dbl raw
+        +int rounded
+        +dimension()
+    }
+
+    struct dim_type <<template>>
+    {
+        +vector<T> coordinates
+        +T min = max
+        +T max = min
+        +T origin = 0
+    }
+}
+}
+
+' ================
+' ||            ||
+' ||   CENTER   ||
+' ||   CENTER   ||
+' ||            ||
+' ================
+
+
+' paraPlot
+
+class parametricPlotter << (P,#3399ff) >>
+{
+    - *pEquation
+    - strvec
+    - str_frames
+    - formatted_string
+    - int samples = 400
+    --Parameters--
+    - *t
+    - *s
+    --Dimensions--
+    - *X
+    - *Y
+}
+
+
+'================================================================================
+
+package "EquationSystem" #LightGoldenRodYellow{
+
+    ' paraEQ tree 
+
+    package Equation #GoldenRod {
+        class parametricEquation << (B,#FF8888) Base >>
+        {
+            -bool : allocated
+            +int : width
+            +int : height
+
+            -x_of*
+            -y_of*
+        }
+
+        class parametricNAME <<parametricEquation>> /' should use a (*)() instead '/
+        {
+            + ctor()\n~override~
+            +x_of*
+            +y_of*
+        }
+       }
+    
+    ' subEQ tree ---
+    
+    package "SubEquation" #GoldenRod {
+        class sub_equation  << (B,#FF8888) Base >>
+        {
+            +dbl operator()(dbl,dbl) \n~virtual~
+        }
+
+        class sub_NAME_x  <<sub_equation>> /' should use a (*)() instead '/
+        {
+            +dbl operator()(dbl,dbl)\n~override~ 
+        }
+
+        class sub_NAME_y   <<sub_equation>> /' should use a (*)() instead '/
+        {
+            +dbl operator()(dbl,dbl)\n~override~
+        }
+    }
+    
+    () "new position" as c1 #green
+}
+
+
+' ===============================================================================================
+' objects
+' ===============================================================================================
+package "Object" <<node>> #LightSlateGrey {
+
+    object PLOT <<parametricPlotter>>{
+    pEquation*
+    strvec
+    str_frames
+    formatted_string
+    int samples = 400
+    --Parameters--
+    t*
+    s*
+    --Dimensions--
+    X*
+    Y*
+    }
+
+    package "EqSys"<<node>> 
+    {
+    object CYCLOID <<parametricNAME>>{
+        x_of*
+        y_of*
+    }
+    object x_of <<sub_NAME_x>>{
+        +operator()
+    }
+    object y_of <<sub_NAME_y>>{
+        +operator()
+    }
+    }
+
+    package "Structs" <<node>> #SteelBlue {
+        together {
+        object  s  <<parameter>>
+        object  t  <<parameter>>
+        }
+
+        package "X Dimension Aggregate"{
+            object X <<dimension>>
+            object Xraw <<dim_type>>
+            object Xrounded <<dim_type>>
+        }
+
+        package "Y Dimension Aggregate"{
+            object Y <<dimension>>
+            object Yraw <<dim_type>>
+            object Yrounded <<dim_type>>
+        }
+    }
+}
+
+' ===============================================================================================
+' start of interactions 
+' ===============================================================================================
+parametricPlotter::pEquation *-l parametricEquation
+parametricPlotter::t o-- parameter  
+parametricPlotter::s o-- parameter  
+parametricPlotter::X o-- dimension  
+parametricPlotter::Y o-- dimension
+
+dimension::dbl *-d- dim_type
+dimension::int *-d- dim_type
+
+parametricEquation <|-- parametricNAME
+parametricEquation::x_of  *--  sub_equation
+parametricEquation::y_of  *--  sub_equation
+
+sub_equation <|-- sub_NAME_x
+sub_equation <|-- sub_NAME_y
+
+parametricPlotter <-[hidden] EquationSystem
+parametricPlotter <-[hidden] Structures
+
+PLOT::pEquation o-- CYCLOID
+CYCLOID::x_of <-- x_of
+CYCLOID::y_of <-- y_of
+
+"X Dimension Aggregate" <-[hidden]- "Y Dimension Aggregate"
+
+X <-r Xraw
+X <-l Xrounded
+
+Y <-r Yraw
+Y <-l Yrounded
+
+' t -[hidden]-> s
+PLOT <-r[hidden]- EqSys
+PLOT --[hidden]l-> Structs
+
+PLOT::X *-- X
+PLOT::Y *-- Y
+PLOT::t *-- t
+PLOT::s *-- s
+
+EquationSystem <--d[hidden]--- Object
+
+
+'suggested changes
+SubEquation *-[#green,thickness=6,hidden]- c1
+c1 <-[#green,thickness=6]u- Structures
+
+
+
+
