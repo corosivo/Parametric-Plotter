@@ -1,0 +1,118 @@
+@startuml Basic Activity Diagram
+
+start
+title //GLFW// Usage
+
+/'
+' Optional
+if (**__UTILIZING: <font:monospaced>header option macros</font>?**) then (Yes)
+:<font:monospaced>#define</font> them;
+note
+GLFW_DLL
+GLFW_INCLUDE_GLCOREARB
+GLFW_INCLUDE_ES1
+GLFW_INCLUDE_ES2
+GLFW_INCLUDE_ES3
+GLFW_INCLUDE_ES31
+GLFW_INCLUDE_ES32
+GLFW_INCLUDE_NONE
+GLFW_INCLUDE_VULKAN
+GLFW_INCLUDE_GLEXT
+GLFW_INCLUDE_GLU
+end note
+/'
+note
+# Use the //GLFW// header to include //OpenGL// 
+    or //OpenGL// //ES// headers portably
+# Do not include window system headers 
+    unless you will use those APIs directly
+# If you do need such headers, include 
+    them before the //GLFW// header
+end note '\/
+else (No)
+endif
+
+' Optional
+if (**__UTILIZING: extension loading library?**) then (Yes)
+:  <font:monospaced>#include <libname/lib.h></font>;
+note
+For more information,
+see the example using
+the //extension loading//
+//library// called //glad//
+on the //GLFW// website.
+end note
+else (No)
+endif
+'/
+
+' Main: 1 (base)
+:**Include header**;
+note right
+<font : monospaced> #include <//GLFW///glfw3.h></font>
+end note
+/'
+' Main: 2
+if (**__UTILIZING__: //GLFW// as dynamic or static library?**) then (Dynamically Linked Library)
+else (Statically Linked Library)
+:executable must link against libraries;
+endif
+
+' Main: 3
+
+if (With MinGW or Visual C++ on Windows) then (dynamic)
+:**DLL** is named **glfw3dll**. 
+**__When compiling:** <font:monospaced>#define GLFW_DLL</font>;
+
+else (static)
+:**Static** library is named **glfw3**.
+Must explicitly link with **gdi32**.
+  //MinGW-w64// include default
+set of libraries along with
+other dependencies like
+**user32** and **kernel32**.;
+endif '/
+
+' Main: 4 (base)
+:**Set Error Callback**;
+note right
+<font: monospaced>void error_callback(int error, const char* description)
+<font: monospaced>{  <color: #DarkGreen>// this is the required signature of callback
+<font: monospaced>    fprintf(stderr, "Error: %s\n", description);
+<font: monospaced>}
+<font: monospaced>glfwSetErrorCallback(error_callback);<color:#DarkGreen> // assigns to glfw
+end note
+
+' Main: 5
+:**Initalize**;
+note right
+<font: monospaced>if (!glfwInit())</font>
+<font: monospaced>{</font>
+<font: monospaced>    <color:DarkGreen>// Initialization failed</font>
+<font: monospaced>}</font>
+end note
+
+' Main: 6
+:**Create Window**
+   **with Context**;
+note right
+The //window// and its //OpenGL context// are created with
+a single call to <font:monospaced>glfwCreateWindow</font>, which returns
+a handle to the created //combined-window-and-context// object:
+<font:monospaced> GLFWwindow* window = glfwCreateWindow(640, 480, 
+<font:monospaced>                                       "My Title", 
+<font:monospaced>                                       NULL, NULL);
+<font:monospaced> if (!window)
+<font:monospaced> {
+<font:monospaced><color:#DarkGreen>    // Window or OpenGL context creation failed
+<font:monospaced> }
+end note
+
+
+' Main: N (base)
+:**TERMINATE**;
+note right : <font: monospaced>glfwTerminate();
+
+stop
+
+@enduml
